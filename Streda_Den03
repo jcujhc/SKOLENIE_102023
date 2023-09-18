@@ -147,6 +147,17 @@ col TABLE_NAME for a30
 select TABLE_NAME,TABLESPACE_NAME,NUM_ROWS from user_tables;
 
 
+
+
+
+
+
+
+
+
+
+
+## EXPDP
 ------------------------------------------------------------------------------------------------------------------------
 create user APPADM identified by "start123" default tablespace USERS;
 grant connect to APPADM;
@@ -174,12 +185,8 @@ $ ls -ltr /apps/admin/export
 PRÍKLADY:
 $ expdp student1/start123@DB_tSKDB dumpfile=expdp_db.30072019.dmp LOGFILE=expdp_db.log directory=DPDIR schemas=student05
 
-IMPDP
-$ impdp student1/start123@DB_tSKDB dumpfile=expdp_db.30072019.dmp LOGFILE=impdp_db.log directory=DPDIR tables=mojatabulka
+# EXPDP použitím par file
 
-
-EXPDP/IMPDP použitím par file
---------------------------------------------
 file: mojexport.par
 USERID=student01/start123
 DIRECTORY=DPDIR
@@ -190,6 +197,21 @@ SCHEMAS=student1
 
 $ expdp parfile=mojexport.par
 
+
+## IMPDP
+
+IMPDP použitím par file
+
+file: mojexport.par
+USERID=student01/start123
+DIRECTORY=DPDIR
+DUMPFILE=expdp_db.30072019.dmp
+LOGFILE=expdp_db.30072019.log
+SCHEMAS=student1
+# or TABLES=EMPLOYEES, DEPARTMENTS
+
+IMPDP
+$ impdp student1/start123@DB_tSKDB dumpfile=expdp_db.30072019.dmp LOGFILE=impdp_db.log directory=DPDIR tables=mojatabulka
 
 table_exists_action je použitá pri impdp keď tabuľka už existuje v DB 
                  
@@ -276,11 +298,3 @@ impdp \"/ as sysdba\" dumpfile=expdp_SCH_STUDENT15_24052023.dmp directory=DPDIR 
 impdp \"/ as sysdba\" dumpfile=expdp_SCH_STUDENT15_24052023.dmp directory=DPDIR schemas=STUDENT15 log=expdp.log
 impdp \"/ as sysdba\" dumpfile=expdp_SCH_STUDENT15_24052023.dmp directory=DPDIR tables=STUDENT15.t2 log=expdp.log table_exists_action=replace
 
-
-
-AWS: EXPDP
-https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/oracle-s3-integration.html
-
-Requirements for Importing data with Oracle Data Pump and an Amazon S3 bucket
-# https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Oracle.Procedural.Importing.html
-# https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Oracle.Procedural.Importing.DataPump.html
