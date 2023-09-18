@@ -34,11 +34,17 @@ DB_SKOLENIE =
 DB_tSKDB =
 (DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=10.233.133.153)(PORT=51521))(CONNECT_DATA=(SID=tSKDB)))
 
+## lrwrap - SQLPLUS command line history
+## https://oracle-base.com/articles/linux/rlwrap
+AS ROOT
+yum install rlwrap
+rlwrap sqlplus student15/start123@//10.233.133.153:51521/tSKDB
+
 
 ## pridat do profile
 vi .bashrc
 alias s+='sqlplus student15/start123@//10.233.133.153:51521/tSKDB'
-
+alias sw='rlwrap sqlplus student15/start123@//10.233.133.153:51521/tSKDB'
 
 -----------------------------------------------------------------------------------------------------------------------------------------------------
 ## Instalacia DB SW
