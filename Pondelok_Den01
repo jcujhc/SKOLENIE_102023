@@ -1,5 +1,58 @@
+## Instalacia client 19.3
+
+mkdir /home/einstein-*/oracle
+mkdir /home/einstein-*/sw
+
+# Centos8 is not supported for Oracle yet 
+export CV_ASSUME_DISTID=OEL7.8
+
+# Install using GUI - unzip and run runInstaller 
+unzip /home/einstein-*/sw/LINUX*
+oracle@centos8$ ./runInstaller
+
+sqlplus -v
+
+1/ Direct connect - Easy connect
+export ORACLE_HOME=/home/einstein-*/oracle/19.3
+export PATH=$PATH:$ORACLE_HOME/bin
+sqlplus student15/start123@//10.233.133.153:51521/tSKDB
+sqlplus student15@DB_SKOLENIE
+.
+
+2/ using TNSNAMES.ORA
+
+[einstein-15@centos8 admin]$ echo $ORACLE_HOME
+/home/einstein-15/oracle/19.3
+
+cd /home/einstein-15/oracle/19.3
+cd network/admin/
+
+[einstein-15@centos8 admin]$ cat tnsnames.ora
+DB_SKOLENIE =
+(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=10.233.133.155)(PORT=1521))(CONNECT_DATA=(SID=SKOLENIE)))
+
+DB_tSKDB =
+(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=10.233.133.153)(PORT=51521))(CONNECT_DATA=(SID=tSKDB)))
+
+
+## pridat do profile
+vi .bashrc
+alias s+='sqlplus student15/start123@//10.233.133.153:51521/tSKDB'
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+## Instalacia DB SW
+ls -la /etc/oraInst.loc
+mv /etc/oraInst.loc /etc/oraInst.loc_bck
+
+## AS ROOT
 [einsteinteacher@centos8 ~]$ sudo su -
-Last login: Mon May 22 08:16:43 CEST 2023 on pts/1
+
+groupadd oinstall
+groupadd dba
+useradd -g oinstall -G dba oracle
+passwd oracle 
+
 
 [root@centos8 ~]# su - oracle
 Last login: Mon May 22 08:20:05 CEST 2023 on pts/1
@@ -94,37 +147,4 @@ NAME                                 TYPE        VALUE
 pga_aggregate_limit                  big integer 2G
 pga_aggregate_target                 big integer 750M
 
-SQL> alter system set sga_target=40G scope=spfile;
 
-
-
-
-
-## INSTALACIA KLIENTA 19.3
-mkdir /home/einstein-*/oracle
-mkdir /home/einstein-*/sw
-
-export CV_ASSUME_DISTID=OEL7.8
-
-unzip /home/einstein-*/sw/LINUX*
-oracle@centos8$ ./runInstaller
-
-sqlplus -v
-
-vi .bashrc
-export ORACLE_HOME=/home/einstein-*/oracle/19.3
-export PATH=$PATH:$ORACLE_HOME/bin
-alias s+='sqlplus student15/start123@//10.233.133.153:51521/tSKDB'
-
-## TNSNAMES.ORA
---------------------------------------------------------------------------------------------------
-[einstein-15@centos8 admin]$ echo $ORACLE_HOME
-/home/einstein-15/oracle/19.3
-[einstein-15@centos8 19.3]$ cd network/admin/
-
-[einstein-15@centos8 admin]$ cat tnsnames.ora
-DB_SKOLENIE =
-(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=10.233.133.155)(PORT=1521))(CONNECT_DATA=(SID=SKOLENIE)))
-
-DB_tSKDB =
-(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=10.233.133.153)(PORT=51521))(CONNECT_DATA=(SID=tSKDB)))
