@@ -1,1 +1,163 @@
+## SW DOWNLOAD
+https://www.oracle.com/in/database/technologies/oracle19c-linux-downloads.html
 
+
+## LRWRAP
+---------------------------------------------------------------------------------
+https://oracle-base.com/articles/linux/rlwrap
+
+rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+yum install rlwrap
+alias sql='rlwrap sqlplus / as sysdba'
+oracle@centos8$ sql
+
+SQL*Plus: Release 19.0.0.0.0 - Production on Fri May 26 09:10:26 2023
+Version 19.3.0.0.0
+
+Copyright (c) 1982, 2019, Oracle.  All rights reserved.
+
+
+Connected to:
+Oracle Database 19c Enterprise Edition Release 19.0.0.0.0 - Production
+Version 19.3.0.0.0
+
+SQL> select * from dual;
+
+D
+-
+X
+
+SQL> select * from dual;
+
+
+## FLASHBACK
+---------------------------------------------------------------------------------
+SQL> alter system set db_recovery_file_dest='/home/oracle/backup' SCOPE=spfile;
+SQL> alter system set db_recovery_file_dest_size=10G SCOPE=spfile;
+SQL> show parameter recovery
+
+
+SQL> alter database flashback on;
+SQL> select flashback_on from v$database;
+
+SQL> create restore point MY_RP guarantee flashback database; 
+
+sqlplus STUDENT15/start123
+SQL> create table T1_backup as select * from t1;
+SQL> create table T2_backup as select * from t2;
+SQL> select to_char(SYSDATE, 'dd.mm.yyyy hh24:mi:ss');
+SQL> truncate table t1;
+SQL> drop table t2;
+
+SQL> shut immediate;
+SQL> startup mount;
+SQL> FLASHBACK DATABASE to restore point MY_RP;
+alebo SQL> FLASHBACK DATABASE TO TIMESTAMP TO_TIMESTAMP('2023-05-26 09:45:00', 'YYYY-MM-DD HH24:MI:SS');
+## FLASHBACK TABLE STUDENT15.AUTA TO BEFORE DROP;
+SQL> alter database open resetlogs;
+
+
+
+## ULOHA
+--------------------------------------------------
+0/ vytvorte si subor cez: vi futbalisti.txt
+   vlozte do suboru riadok 66 - 88
+
+spool /tmp/futbalosti.log
+set lines 200 pages 2000
+set echo ON time ON timing ON
+
+create table futbalisti
+(id number,
+meno varchar2(20),
+priezvisko varchar2(30),
+plat number,
+inserted date
+);
+insert into futbalisti values (1, 'Jozef', 'Palencar', 1000, sysdate);
+insert into futbalisti values (2, 'Peter', 'Pekarik', 2000,sysdate);
+insert into futbalisti values (3, 'Ondrej', 'Duda', 3000,sysdate);
+insert into futbalisti values (4, 'Laco', 'Molnar', 4000,sysdate);
+insert into futbalisti values (5, 'Jozko', 'Kozlej', 5000,sysdate);
+insert into futbalisti values (6, 'Vlado', 'Zvara', 6000,sysdate);
+insert into futbalisti values (7, 'Pavol', 'Dina', 7000,sysdate);
+insert into futbalisti values (8, 'Ruslan', 'Lubarskiy',8000, sysdate);
+commit;
+
+select * from futbalisti;
+exit;
+
+1/ prihlaste sa do databazy pomocou STUDENT15 usera a spuste script futbalisti.txt 
+2/ urobte backup tabulky futbalisti (futbalisti_bck) pomocou sql prikazu
+3/  updatnite tabulku futbalisti nastavte plat 10000 pre futbalistu s menom Laco
+4/  updatnite tabulku futbalisti zvyste plat o 150eur pre futbalistu s id 2 a id 3.
+5/ vymazte hraca z tabulky futbalisti s menom: 'Ruslan', 'Lubarskiy'
+6/ vyexportujte a naimportujte data
+select * from dba_directories where DIRECTORY_NAME='DPDIR';
+expdp \"/ as sysdba\" dumpfile=expdp_STUDENT15.dmp directory=DPDIR schemas=STUDENT15 log=expdp.log
+impdp \"/ as sysdba\" dumpfile=expdp_SCH_STUDENT15_24052023.dmp directory=DPDIR schemas=STUDENT15 log=expdp.log REMAP_SCHEMA=STUDENT15:NEW_APPLIKACNA
+7/ overte ulohu 6:
+   select table_name, owner from dba_tables where owner in ('STUDENT15','NEW_APPLIKACNA');
+
+
+DEMO: tables STUDENT15
+-------------------------------------
+create table ovocie (nazov varchar(20));
+select table_name from user_tables where table_name = 'ovocie';
+insert into ovocie ('pomaranc');
+commit;
+
+create table "ovocie" (nazov varchar(20));
+create table "Ovocie" (nazov varchar(20));
+insert into ovocie values ('jablko');
+commit;
+
+SQL> select table_name from user_tables where table_name like 'o%' or table_name like 'O%';
+
+TABLE_NAME
+--------------------------------------------------------------------------------
+OVOCIE
+Ovocie
+ovocie
+
+SQL> select * from ovocie;
+
+NAZOV
+--------------------
+pomaranc
+jablko
+
+
+
+
+PATCHING
+-------------------------------------
+$ORACLE_HOME/OPatch/opatch lspatches
+
+29585399;OCW RELEASE UPDATE 19.3.0.0.0 (29585399)
+29517242;Database Release Update : 19.3.0.0.190416 (29517242)
+OPatch succeeded.
+
+$ORACLE_HOME/OPatch/opatch lsinventory
+
+-rw-r--r--. 1 oracle oinstall 1495300727 May 26 11:31 p32218454_190000_Linux-x86-64.zip
+-rw-r--r--. 1 oracle oinstall  124843817 May 26 11:32 p6880880_122010_Linux-x86-64.zip
+
+/u01/app/oracle
+unzip p32218454_190000_Linux-x86-64.zip 
+cd $ORACLE_HOME
+cp /u01/app/oracle/p6880880_122010_Linux-x86-64.zip 
+mv Opatch Opatch_bck
+unzip p6880880_122010_Linux-x86-64.zip
+
+SQL> shu immediate;
+
+lsnrctl stop LISTENER
+
+cd /u01/app/oracle/32218454
+
+$ORACLE_HOME/OPatch/opatch apply
+
+SQL> startup
+
+$ORACLE_HOME/OPatch/datapatch -verbose
