@@ -1,7 +1,7 @@
 
-rm -rf /home/gauss-0X/oracle/product/19.0.0/client_1/network/admin/tnsnames.ora
+rm -rf /home/einst-0X/oracle/product/19/client_1/network/admin/tnsnames.ora
 #
-vi /home/gauss-0X/oracle/product/19.0.0/client_1/network/admin/tnsnames.ora
+vi /home/gauss-0X/oracle/product/19/client_1/network/admin/tnsnames.ora
 orcl =
   (DESCRIPTION =
     (ADDRESS = (PROTOCOL = TCP)(HOST = 10.233.133.28)(PORT = 1521))
@@ -12,25 +12,57 @@ orcl =
   )
 
 cd 
-cd /home/gauss-0X
+cd /home/einst-0X
 vi .bash_profile
 ## pridat na koniec suboru
 export ORACLE_HOME=/home/gauss-0X/oracle/product/19.0.0/client_1
 export PATH=$PATH:$ORACLE_HOME/bin
 alias stud='sqlplus student0X@orcl'
 alias s+='rlwrap sqlplus student0X/start123@orcl'
-
-
-
-
-
-
 s+
+
+----------------------------------------------------------------------------------------------------------------------------
 SELECT SYS_CONTEXT ('USERENV', 'SESSION_USER') FROM DUAL;
 SELECT SYS_CONTEXT ('USERENV', 'DB_NAME') FROM DUAL;
 SELECT SYS_CONTEXT ('USERENV', 'CURRENT_USER') FROM DUAL;
 
 select sid,USERNAME,MACHINE,STATUS,LOGON_TIME,PROGRAM from v$session;
+
+
+
+
+GRANTS ON v$session
+--------------------------------------------------------------------------
+grant select on v_$session to student01;
+grant select on v_$session to student02;
+grant select on v_$session to student03;
+grant select on v_$session to student04;
+grant select on v_$session to student05;
+grant select on v_$session to student06;
+grant select on v_$session to student07;
+grant select on v_$session to student08;
+grant select on v_$session to student09;
+grant select on v_$session to student10;
+grant select on v_$session to student11;
+grant select on v_$session to student12;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 SQL@tSKDB> desc v$session
 
