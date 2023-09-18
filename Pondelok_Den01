@@ -46,6 +46,224 @@ vi .bashrc
 alias s+='sqlplus student15/start123@//10.233.133.153:51521/tSKDB'
 alias sw='rlwrap sqlplus student15/start123@//10.233.133.153:51521/tSKDB'
 
+
+# +++++++++++++++++++++++++++ START SCRIPT ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+-- =========================================================================
+-- # ADMIN SETUP - NASTAVENIE TEST PROSTREDIA PRE FARMU PRE ADMINA
+-- -----------------------------------------------------------------------
+-- ## NASTAVENIE TEST PROSTREDIA PRE SKOLENIE PRE ADMINA
+-- vytvorenie roli a userov pre lektora a studentov
+-- grantovanie roli
+-- vytvorenie welcome tabulky
+
+-- for DB
+-- alter profile default limit password_verify_function null;
+-- To Enable it back :
+-- alter profile default limit password_verify_function your-password-verify-function-name
+
+
+
+
+-- #### create tablespace
+-- select file_name, bytes/1024/1024 from dba_data_files where file_id = 1;
+-- create tablespace SKOLENIE2018
+-- datafile '/u01/app/oradata/o_SKOLENIE2018_1.dbf' size 5G autoextend off
+-- logging
+-- extent management local;
+
+
+
+-- #### create role SKOLENIE_ROLE
+prompt Create roles SKOLENIE_ROLE, DBA_SKOLENIE
+
+create role SKOLENIE_ROLE;
+grant connect to SKOLENIE_ROLE;
+grant create session to SKOLENIE_ROLE;
+grant create table to SKOLENIE_ROLE;
+grant create view to SKOLENIE_ROLE;
+
+
+
+
+-- #### create role DBA_SKOLENIE
+
+create role DBA_SKOLENIE;
+grant select on dba_tablespaces to DBA_SKOLENIE;
+grant select on dba_data_files to DBA_SKOLENIE;
+grant select on dba_temp_files to DBA_SKOLENIE;
+grant select on dba_tables to DBA_SKOLENIE;
+grant select on dba_directories to DBA_SKOLENIE;
+
+
+-- ## check
+col ROLE for a40
+select * from DBA_ROLES where ROLE in ('DBA_SKOLENIE','SKOLENIE_ROLE');
+-- grant DBA_SKOLENIE to STUDENT01;
+
+
+pause;
+
+-- #### create users
+prompt Create LEKTOR01 and STUDENTXX users
+
+## alter database datafile '/u01/app/oradata/users01.dbf' resize 5G;
+
+
+create user LEKTOR01 identified by "start123" default tablespace USERS temporary tablespace TEMP profile DEFAULT;
+
+create user student01 identified by "start123" default tablespace USERS temporary tablespace TEMP profile DEFAULT;
+create user student02 identified by "start123" default tablespace USERS temporary tablespace TEMP profile DEFAULT;
+create user student03 identified by "start123" default tablespace USERS temporary tablespace TEMP profile DEFAULT;
+create user student04 identified by "start123" default tablespace USERS temporary tablespace TEMP profile DEFAULT;
+create user student05 identified by "start123" default tablespace USERS temporary tablespace TEMP profile DEFAULT;
+create user student06 identified by "start123" default tablespace USERS temporary tablespace TEMP profile DEFAULT;
+create user student07 identified by "start123" default tablespace USERS temporary tablespace TEMP profile DEFAULT;
+create user student08 identified by "start123" default tablespace USERS temporary tablespace TEMP profile DEFAULT;
+create user student09 identified by "start123" default tablespace USERS temporary tablespace TEMP profile DEFAULT;
+create user student10 identified by "start123" default tablespace USERS temporary tablespace TEMP profile DEFAULT;
+create user student11 identified by "start123" default tablespace USERS temporary tablespace TEMP profile DEFAULT;
+create user student12 identified by "start123" default tablespace USERS temporary tablespace TEMP profile DEFAULT;
+create user student13 identified by "start123" default tablespace USERS temporary tablespace TEMP profile DEFAULT;
+create user student14 identified by "start123" default tablespace USERS temporary tablespace TEMP profile DEFAULT;
+create user student15 identified by "start123" default tablespace USERS temporary tablespace TEMP profile DEFAULT;
+create user student16 identified by "start123" default tablespace USERS temporary tablespace TEMP profile DEFAULT;
+create user student17 identified by "start123" default tablespace USERS temporary tablespace TEMP profile DEFAULT;
+create user student18 identified by "start123" default tablespace USERS temporary tablespace TEMP profile DEFAULT;
+create user student19 identified by "start123" default tablespace USERS temporary tablespace TEMP profile DEFAULT;
+create user student20 identified by "start123" default tablespace USERS temporary tablespace TEMP profile DEFAULT;
+pause;
+
+
+
+-- vytvorim ich naraz v loope
+
+-- begin
+-- for i in 1..20
+-- loop
+--   execute immediate 'create user STUDENT'||i||' identified by start123 default tablespace USERS temporary tablespace TEMP profile DEFAULT';
+--   end loop;
+-- end;
+-- /
+
+
+
+prompt grant ROLES to USERS
+prompt grant create session directly to users
+-- #### grant role + alter user ????
+
+begin
+ for i in (select username from dba_users where username like 'STUDENT%' order by username)
+ loop
+   execute immediate 'grant create session to '||i.username;
+   execute immediate 'alter user '||i.username|| ' quota 2G on USERS';
+   end loop;
+ end;
+/
+
+
+begin
+ for i in (select username from dba_users where username like 'STUDENT%' order by username)
+ loop
+   execute immediate 'grant create session to '||i.username;
+   end loop;
+ end;
+/
+
+
+--begin
+--for i in (select username from dba_users where username like 'STUDENT%' order by username)
+--loop
+--dbms_output.put_line('grant SKOLENIE_ROLE to '||i.username||';');
+--dbms_output.put_line('alter user '||i.username|| ' quota 1G on USERS;');
+--   end loop;
+-- end;
+-- /
+
+
+
+
+
+-- // grant DBA to LEKTOR01
+
+begin
+ for i in (select * from dba_users where username like 'LEKTOR%')
+ loop
+     execute immediate 'grant dba to '||i.username;
+   end loop;
+ end;
+/
+
+
+-- // grant DBA to STUDENTS
+
+-- begin
+-- for i in (select * from dba_users where username like 'STUDENT%')
+-- loop
+--     execute immediate 'grant dba to '||i.username;
+--   end loop;
+-- end;
+-- /
+
+
+-- BAVI
+prompt create WELCOME table
+-- ## vytvorenie uvodnej welcome tabulky
+alter session set current_schema = lektor01;
+drop table welcome;
+create table welcome(text varchar(100));
+insert into welcome values ('Ahoj, vitam ta v DB, prave si spravil uspesny select v databaze');
+commit;
+
+
+
+
+
+-- grant select on welcome for STUDENTS
+begin
+ for i in (select username from dba_users where username like 'STUDENT%' order by username)
+ loop
+     execute immediate 'grant select on lektor01.welcome to '||i.username;
+   end loop;
+ end;
+/
+
+
+
+-- check users
+alter session set nls_date_format = 'dd.mm.yyyy hh24:mi:ss';
+set lines 160
+col USERNAME for a30
+select USERNAME,DEFAULT_TABLESPACE,TEMPORARY_TABLESPACE,CREATED from dba_users where username like 'STUDENT%' order by 1;
+
+
+-- ## ENDE
+
+pause;
+
+alter session set current_schema = student01;
+show user;
+select * from welcome;
+select * from lektor01.welcome;
+
+-- ---------------------------------------------------------------------------------------------------------------------------------
+-- uzitocne odkazy:
+-- ## http://www.fi.muni.cz/~xsvenda/vyuka/pv003/
+-- ---------------------------------------------------------------------------------------------------------------------------------
+pause;
+connect student01/start123
+show user;
+select * from lektor01.welcome;
+
+# +++++++++++++++++++++++++++ END SCRIPT ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
+
+
+
+
+
+
 -----------------------------------------------------------------------------------------------------------------------------------------------------
 ### START  Instance / DB
 [oracle@centos8 ~]$ sqlplus '/as sysdba'
