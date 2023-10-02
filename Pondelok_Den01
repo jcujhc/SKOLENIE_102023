@@ -1,13 +1,15 @@
 ## Instalacia client 19.3
 
-mkdir /home/einstein-*/oracle
-mkdir /home/einstein-*/sw
+mkdir /home/einstein*/oracle
+mkdir /home/einstein*/sw
 
 # Centos8 is not supported for Oracle yet 
 export CV_ASSUME_DISTID=OEL7.8
 
 # Install using GUI - unzip and run runInstaller 
-unzip /home/einstein-*/sw/LINUX*
+cp /tmp/LINUX* /home/einstein*/sw
+unzip /home/einstein*/sw/LINUX*
+cd client
 oracle@centos8$ ./runInstaller
 
 sqlplus -v
