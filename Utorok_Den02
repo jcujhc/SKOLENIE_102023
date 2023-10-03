@@ -5,6 +5,7 @@ sqlplus student*/start123@//10.233.133.153:1521/tSKDB
 
 
 
+
 SPRAVNE
 export ORACLE_HOME=/home/einstein7/oracle/product/19.0.0/client_1
 export PATH=$PATH:$ORACLE_HOME/bin
