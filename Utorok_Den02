@@ -15,7 +15,7 @@ sqlplus student07/start123@//10.233.133.153:1521/tSKDB
 
 2/ using TNSNAMES.ORA
 
-[einstein-15@centos8 admin]$ echo $ORACLE_HOME
+[einstein7@centos8 admin]$ echo $ORACLE_HOME
 /home/einstein7/oracle/product/19.0.0/client_1
 
 cd /home/einstein7/oracle/product/19.0.0/client_1
@@ -45,27 +45,6 @@ alias sw='rlwrap sqlplus student07/start123@//10.233.133.153:1521/tSKDB'
 
 
 
-rm -rf /home/einst-0X/oracle/product/19/client_1/network/admin/tnsnames.ora
-#
-vi /home/gauss-0X/oracle/product/19/client_1/network/admin/tnsnames.ora
-orcl =
-  (DESCRIPTION =
-    (ADDRESS = (PROTOCOL = TCP)(HOST = 10.233.133.28)(PORT = 1521))
-    (CONNECT_DATA =
-      (SERVER = DEDICATED)
-      (SERVICE_NAME = orcl)
-    )
-  )
-
-cd 
-cd /home/einst-0X
-vi .bash_profile
-## pridat na koniec suboru
-export ORACLE_HOME=/home/gauss-0X/oracle/product/19.0.0/client_1
-export PATH=$PATH:$ORACLE_HOME/bin
-alias stud='sqlplus student0X@orcl'
-alias s+='rlwrap sqlplus student0X/start123@orcl'
-s+
 
 
 JAZYK SQL
