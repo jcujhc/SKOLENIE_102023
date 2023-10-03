@@ -1,3 +1,49 @@
+1/ Direct connect - Easy connect
+export ORACLE_HOME=/home/einstein*/oracle/product/19.0.0/client_1
+export PATH=$PATH:$ORACLE_HOME/bin
+sqlplus student*/start123@//10.233.133.153:1521/tSKDB
+
+
+
+SPRAVNE
+export ORACLE_HOME=/home/einstein7/oracle/product/19.0.0/client_1
+export PATH=$PATH:$ORACLE_HOME/bin
+sqlplus student07/start123@//10.233.133.153:1521/tSKDB
+
+
+
+
+2/ using TNSNAMES.ORA
+
+[einstein-15@centos8 admin]$ echo $ORACLE_HOME
+/home/einstein7/oracle/product/19.0.0/client_1
+
+cd /home/einstein7/oracle/product/19.0.0/client_1
+cd network/admin/
+
+cat tnsnames.ora
+DB_SKOLENIE =
+(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=10.233.133.153)(PORT=1521))(CONNECT_DATA=(SID=SKOLENIE)))
+
+DB_tSKDB =
+(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=10.233.133.153)(PORT=1521))(CONNECT_DATA=(SID=tSKDB)))
+
+sqlplus student07@DB_SKOLENIE
+
+
+## lrwrap - SQLPLUS command line history
+## https://oracle-base.com/articles/linux/rlwrap
+AS ROOT
+yum install rlwrap
+rlwrap sqlplus student07/start123@//10.233.133.153:1521/tSKDB
+
+
+## pridat do profile
+vi .bashrc
+alias s+='sqlplus student07/start123@//10.233.133.153:1521/tSKDB'
+alias sw='rlwrap sqlplus student07/start123@//10.233.133.153:1521/tSKDB'
+
+
 
 rm -rf /home/einst-0X/oracle/product/19/client_1/network/admin/tnsnames.ora
 #
