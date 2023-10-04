@@ -1,3 +1,4 @@
+ULOHA NA RANO
 ## 1/ zmena portu v listeneri
 
 1521 ----> 1525  (Co si musim upravit) ?
@@ -64,7 +65,6 @@ commit;
 
 
 
-
 ## 4/ check user grants 
 ---------------------------------------------------
 set lines 200
@@ -92,14 +92,36 @@ col TABLE_NAME for a30
 select TABLE_NAME,TABLESPACE_NAME from user_tables;
 
 
+## 5/ uloha 
+Odpovedzte pravdivo na otazku: Paci sa vam toto skolenie ?
+Odpoved zapiste/vlozte do tabulky LEKTOR01.ULOHA_10_2023
+
+pomocka: desc LEKTOR01.ULOHA_10_2023
+
+-- LOCK
 
 
-
-1/
+## 6/ ACC incident generate
 begin
     sys.dbms_system.ksdwrt(2, ORA-7445 wrong processes in alert log ');
 end;
 /
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -352,7 +374,7 @@ alter tablespace add datafile '/XXX/CCC/AAA/dasda.dbf' size 200M;
 
 
 
-## check user grants 
+## check user grants - NEFUNGUJE SPRAVNE
 ---------------------------------------------------
 set pages 0 feed off veri off lines 500
 
