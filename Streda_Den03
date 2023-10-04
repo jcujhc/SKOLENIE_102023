@@ -285,6 +285,28 @@ export ORACLE_SID=tmyDB
 export PATH=$PATH:/u01/app/oracle/product/19c/bin
 sqlplus / as sysdba
 
+
+cd /u01/app/oracle/product/19c/network/admin/
+vi listener.ora
+LISTENER_tmyDB =
+  (DESCRIPTION_LIST =
+    (DESCRIPTION =
+      (ADDRESS = (PROTOCOL = IPC)(KEY = EXTPROC1))
+      (ADDRESS = (PROTOCOL = TCP)(HOST = 10.233.133.28)(PORT = 1521))
+    )
+  )
+
+SID_LIST_LISTENER_tmyDB =
+  (SID_LIST =
+    (SID_DESC =
+      (ORACLE_HOME = /u01/app/oracle/product/19c)
+      (SID_NAME = tmyDB)
+    )
+   )
+
+
+
+
 -------------------------------------------------------------------------------------------------------------------------
 alter session set nls_date_format="yyyy-mm-dd hh24:mi:ss";
 
