@@ -1,6 +1,24 @@
 ## 1/ zmena portu v listeneri
 
+1521 ----> 1525  (Co si musim upravit) ?
 
+
+
+echo $ORACLE_HOME
+cd /home/einstein7/oracle/product/19.0.0/client_1
+cd network/admin/
+
+vi tnsnames.ora
+DB_SKOLENIE =
+(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=10.233.133.153)(PORT=1525))(CONNECT_DATA=(SID=SKOLENIE)))
+
+DB_tSKDB =
+(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=10.233.133.153)(PORT=1525))(CONNECT_DATA=(SID=tSKDB)))
+
+tnsping DB_SKOLENIE
+tnsping DB_SKOLENIE
+
+sqlplus student16@DB_SKOLENIE
 
 
 
