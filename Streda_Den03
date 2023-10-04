@@ -22,6 +22,8 @@ sqlplus student16@DB_SKOLENIE
 
 ## 2/ run script
 set sqlprompt "_user'@'_connect_identifier'> '"
+
+@/tmp/vyt_tabulky.txt
 @vyt_tabulky.txt
 
 
