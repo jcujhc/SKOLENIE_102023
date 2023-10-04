@@ -110,17 +110,23 @@ Odpoved zapiste/vlozte do tabulky LEKTOR01.ULOHA_10_2023
 
 pomocka: desc LEKTOR01.ULOHA_10_2023
 
--- 1/ LOCK
+LOCK
+-------
 select * from LEKTOR01.ULOHA_10_2023;
+    S1: delete from LEKTOR01.ULOHA_10_2023;
+        S2: update LEKTOR01.ULOHA_10_2023 set ODPOVED = 'ANO' where PER_NUMBER=5;
+        S3: update LEKTOR01.ULOHA_10_2023 set ODPOVED = 'ANO' where PER_NUMBER=11;
 
-
--- 2/ truncate / delete rozdiel
-
-
+truncate / delete rozdiel
+-------------------------------------------
+delete from LEKTOR01.ZAMESTNANCI;
+delete from LEKTOR01.ZAMESTNANCI where PER_NUMBER=5;
+truncate table LEKTOR01.ZAMESTNANCI;
+-- truncate table LEKTOR01.ZAMESTNANCI where PER_NUMBER=5;        !!! no rollback
 
 ## 6/ ACC incident generate
 begin
-    sys.dbms_system.ksdwrt(2, ORA-7445 wrong processes in alert log ');
+    sys.dbms_system.ksdwrt(2, 'ORA-7445 wrong processes in alert log');
 end;
 /
 
