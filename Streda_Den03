@@ -3,7 +3,6 @@
 1521 ----> 1525  (Co si musim upravit) ?
 
 
-
 echo $ORACLE_HOME
 cd /home/einstein7/oracle/product/19.0.0/client_1
 cd network/admin/
@@ -21,11 +20,50 @@ tnsping DB_SKOLENIE
 sqlplus student16@DB_SKOLENIE
 
 
+## 2/ run script
+set sqlprompt "_user'@'_connect_identifier'> '"
+@vyt_tabulky.txt
+
+
+spool /tmp/mojlog.txt
+set echo on time on timing on
+@vyt_tabulky.txt
+
+
+## 3/ 
+
+select * from ZAMESTNANCI;
+select * from ODDELENIA;
+
+desc ZAMESTNANCI;
+desc ODDELENIA;
+
+select * from ZAMESTNANCI where EMP_NUMBER=460061;
+
+select * from ZAMESTNANCI where LAST_NAME like '%ol%';
+
+create table TAB1(id number, meno varchar(30), dt_vlozenia date);
+insert into TAB1 values (1, 'jozef cuj', sysdate);
+commit;
+insert into TAB1 values (1, 'jozef cuj');
+insert into TAB1(id,meno) values (1, 'jozef cuj');
+
+update ODDELENIA set DEPT_HEADOF='Jozef Cuj' where DEPT_ID=4567;
+commit;
+
+create table ZAMESTNANCI_BCK as select * from ZAMESTNANCI;
+
+delete from ZAMESTNANCI;
+rollback;
+
+delete from ZAMESTNANCI where EMP_NUMBER = 261942;
+commit;
 
 
 
 
-## 1/ check user grants 
+
+## 4/ check user grants 
 ---------------------------------------------------
 set lines 200
 col USERNAME for a30
@@ -48,7 +86,8 @@ col OWNER for a30
 col ROLE for a30
 select ROLE,OWNER,TABLE_NAME,PRIVILEGE from role_tab_privs
 
-
+col TABLE_NAME for a30
+select TABLE_NAME,TABLESPACE_NAME from user_tables;
 
 
 
