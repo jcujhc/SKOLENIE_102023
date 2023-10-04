@@ -119,10 +119,10 @@ select * from LEKTOR01.ULOHA_10_2023;
 
 truncate / delete rozdiel
 -------------------------------------------
-delete from LEKTOR01.ZAMESTNANCI;
-delete from LEKTOR01.ZAMESTNANCI where PER_NUMBER=5;
-truncate table LEKTOR01.ZAMESTNANCI;
--- truncate table LEKTOR01.ZAMESTNANCI where PER_NUMBER=5;        !!! no rollback
+delete from ZAMESTNANCI;
+delete from ZAMESTNANCI where PER_NUMBER=5;
+truncate table ZAMESTNANCI;
+-- truncate table ZAMESTNANCI where PER_NUMBER=5;        !!! no rollback
 
 ## 6/ ACC incident generate
 begin
