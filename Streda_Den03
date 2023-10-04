@@ -1,3 +1,73 @@
+## 1/ check user grants 
+---------------------------------------------------
+set pages 0 feed off veri off lines 500
+
+accept oldname prompt "Enter username: "
+
+-- Grant Roles...
+select 'grant '||granted_role||' to &&oldname'||
+       decode(ADMIN_OPTION, 'YES', ' WITH ADMIN OPTION')||';'
+from   user_role_privs;
+
+-- Grant System Privs...
+select 'grant '||privilege||' to &&oldname'||
+       decode(ADMIN_OPTION, 'YES', ' WITH ADMIN OPTION')||';'
+from   user_sys_privs;
+
+-- Grant Table Privs...
+select 'grant '||privilege||' on '||owner||'.'||table_name||' to &&oldname;'
+from   sys.user_tab_privs
+where  grantee = upper('&&oldname');
+
+-- Grant Column Privs...
+select 'grant '||privilege||' on '||owner||'.'||table_name||
+       '('||column_name||') to &&oldname;'
+from   sys.user_col_privs;
+
+-- Tablespace Quotas...
+select 'alter user &&oldname quota '||
+decode(max_bytes, -1, 'UNLIMITED', max_bytes)||
+' on '||tablespace_name||';'
+from sys.user_ts_quotas;
+
+
+-- Set Default Role...
+set serveroutput on
+declare
+  defroles varchar2(4000);
+begin
+  for c1 in (select * from sys.user_role_privs
+              where USERNAME = upper('&&oldname')
+                and default_role = 'YES'
+  ) loop
+      if length(defroles) > 0 then
+         defroles := defroles||','||c1.granted_role;
+      else
+         defroles := defroles||c1.granted_role;
+      end if;
+  end loop;
+  dbms_output.put_line('alter user &&oldname default role '||defroles||';');
+end;
+/
+
+
+
+
+
+
+
+1/
+begin
+    sys.dbms_system.ksdwrt(2, ORA-7445 wrong processes in alert log ');
+end;
+/
+
+
+
+
+
+
+
 ULOHY
 1. prestavil som port na listeneri na 1525 na Databazovom servri
    u vas (na clientskych servroch) v tnsnames.ora si zmente port na 1525 a pripojte sa do databazi
