@@ -30,7 +30,7 @@ set echo on time on timing on
 @vyt_tabulky.txt
 
 
-## 3/ 
+## 3/ praca s SQL 
 
 select * from ZAMESTNANCI;
 select * from ODDELENIA;
