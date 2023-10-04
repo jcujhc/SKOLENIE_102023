@@ -136,6 +136,45 @@ end;
 
 INSTALACIA ORACLE DB SW A VYTVORENIE DB
 --------------------------------------------------------------------------------------------
+## https://docs.oracle.com/en/database/oracle/oracle-database/19/ladbi/checking-kernel-and-package-requirements-for-linux.html#GUID-7065A86D-C2AB-4731-953B-12AC25C94156
+## https://oracle-base.com/articles/19c/oracle-db-19c-installation-on-oracle-linux-7
+PREREQ
+-----------------------------
+dnf install -y bc \
+binutils \
+elfutils-libelf \
+elfutils-libelf-devel \
+fontconfig-devel \
+glibc \
+glibc-devel \
+ksh \
+libaio \
+libaio-devel \
+libXrender \
+libXrender-devel \
+libX11 \
+libXau \
+libXi \
+libXtst \
+libgcc \
+librdmacm-devel \
+libstdc++ \
+libstdc++-devel \
+libxcb \
+make \
+net-tools \
+smartmontools \
+sysstat \
+unzip \
+libnsl \
+libnsl2
+
+
+
+
+
+
+
 ## as ROOT user
 groupadd oinstall
 groupadd dba
