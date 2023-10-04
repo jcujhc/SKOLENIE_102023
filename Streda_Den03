@@ -60,6 +60,14 @@ commit;
 
 create table ZAMESTNANCI_BCK as select * from ZAMESTNANCI;
 
+create table OVOCIE(id number, meno varchar(30), dt_vlozenia date);
+insert into OVOCIE values (1, 'pomaranc', sysdate);
+create table ovocie(id number, meno varchar(30), dt_vlozenia date);
+insert into ovocie values (1, 'pomaranc', sysdate);
+create table Ovocie(id number, meno varchar(30), dt_vlozenia date);
+insert into Ovocie values (1, 'pomaranc', sysdate);
+
+
 delete from ZAMESTNANCI;
 rollback;
 
