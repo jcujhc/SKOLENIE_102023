@@ -307,6 +307,14 @@ SID_LIST_LISTENER_tmyDB =
 
 
 
+
+sqlplus student16/start123@//10.233.133.153:1525/tSKDB
+
+sqlplus student16/start123@//10.233.133.153:1525/tSKDB
+
+
+
+
 -------------------------------------------------------------------------------------------------------------------------
 alter session set nls_date_format="yyyy-mm-dd hh24:mi:ss";
 
