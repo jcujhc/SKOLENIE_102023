@@ -122,58 +122,6 @@ end;
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-ULOHY
-1. prestavil som port na listeneri na 1525 na Databazovom servri
-   u vas (na clientskych servroch) v tnsnames.ora si zmente port na 1525 a pripojte sa do databazi
-
-2. spustite script nachadzajuci sa v /tmp/sw/import_zamestnanci.sql
-
-3. pomocou desc a count(*) zistite kolko stlpcov a riadkov ma tabulka ZAM
-
-4. Pomocu prikazu "create table ZAM_BCK as select * from ZAM;" urobte backup tabulky ZAM
-
-5. Zmazte lubovolny riadok z tab ZAM, nezabudnite tranzakciu korektne ukoncit
-
-6. v tabulke ZAM pomocou SELECTU zistite ake maju platy zamestnanci s priezviskom Horvath
-
-7. v tabulke ZAM si zvyste na 3000 eur
-
-8. Pravdivo si odpovedzte na otazku: paci sa mi toto skolenie ?
-   A odpoved zapiste do tabulky: LEKTOR01.ODPOVED
-
-
-POMOCKY:
-https://www.w3schools.com/sql/sql_syntax.asp
-----------
-1. echo $ORACLE_HOME
-2. @
-3. select count(*) from
-4. 
-5. delete from ZAM 
-6. desc ZAM
-7. update ZAM set  
-8. desc LEKTOR01.ODPOVED 
-   INSERT INTO ...
-
-
-
-
-
-
-
-
 INSTALACIA ORACLE DB SW A VYTVORENIE DB
 --------------------------------------------------------------------------------------------
 ## as ROOT user
