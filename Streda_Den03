@@ -98,7 +98,12 @@ Odpoved zapiste/vlozte do tabulky LEKTOR01.ULOHA_10_2023
 
 pomocka: desc LEKTOR01.ULOHA_10_2023
 
--- LOCK
+-- 1/ LOCK
+select * from LEKTOR01.ULOHA_10_2023;
+
+
+-- 2/ truncate / delete rozdiel
+
 
 
 ## 6/ ACC incident generate
