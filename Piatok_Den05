@@ -1,3 +1,81 @@
+## ULOHA 1 - backup DB
+---------------------------------
+rman target /
+
+RMAN> show all;
+
+using target database control file instead of recovery catalog
+RMAN configuration parameters for database with db_unique_name TSKDB are:
+CONFIGURE RETENTION POLICY TO REDUNDANCY 1; # default
+CONFIGURE BACKUP OPTIMIZATION OFF; # default
+CONFIGURE DEFAULT DEVICE TYPE TO DISK; # default
+CONFIGURE CONTROLFILE AUTOBACKUP ON; # default
+CONFIGURE CONTROLFILE AUTOBACKUP FORMAT FOR DEVICE TYPE DISK TO '%F'; # default
+CONFIGURE DEVICE TYPE DISK PARALLELISM 1 BACKUP TYPE TO BACKUPSET; # default
+CONFIGURE DATAFILE BACKUP COPIES FOR DEVICE TYPE DISK TO 1; # default
+CONFIGURE ARCHIVELOG BACKUP COPIES FOR DEVICE TYPE DISK TO 1; # default
+CONFIGURE MAXSETSIZE TO UNLIMITED; # default
+CONFIGURE ENCRYPTION FOR DATABASE OFF; # default
+CONFIGURE ENCRYPTION ALGORITHM 'AES128'; # default
+CONFIGURE COMPRESSION ALGORITHM 'BASIC' AS OF RELEASE 'DEFAULT' OPTIMIZE FOR LOAD TRUE ; # default
+CONFIGURE RMAN OUTPUT TO KEEP FOR 7 DAYS; # default
+CONFIGURE ARCHIVELOG DELETION POLICY TO NONE; # default
+CONFIGURE SNAPSHOT CONTROLFILE NAME TO '/u01/app/oracle/product/19c/dbs/snapcf_tSKDB.f'; # default
+
+## NASTAVENIE BACKUP DESTINACIE:
+---------------------------------------
+SQL> alter system set db_recovery_file_dest_size=10G;
+SQL> alter system set db_recovery_file_dest='/home/oracle/backup';
+
+SQL> show parameter recovery
+NAME                                 TYPE        VALUE
+------------------------------------ ----------- ------------------------------
+db_recovery_file_dest                string      /home/oracle/backup
+db_recovery_file_dest_size           big integer 10G
+recovery_parallelism                 integer     0
+remote_recovery_file_dest            string
+
+
+## BACKUP DATABAZY:
+---------------------------------------------------------
+rman target /
+
+RMAN> backup database;
+
+Starting backup at 26.05.2023 07:34:27
+using target database control file instead of recovery catalog
+allocated channel: ORA_DISK_1
+channel ORA_DISK_1: SID=506 device type=DISK
+channel ORA_DISK_1: starting full datafile backup set
+channel ORA_DISK_1: specifying datafile(s) in backup set
+input datafile file number=00002 name=/u01/data/tSKDB/skolenie02.dbf
+input datafile file number=00001 name=/u01/data/tSKDB/system01.dbf
+input datafile file number=00003 name=/u01/data/tSKDB/sysaux01.dbf
+input datafile file number=00005 name=/u01/data/tSKDB/skolenie01.dbf
+input datafile file number=00007 name=/u01/data/tSKDB/users01.dbf
+input datafile file number=00004 name=/u01/data/tSKDB/undotbs01.dbf
+input datafile file number=00008 name=/u01/data/tSKDB/APLIKACIA/apll_01.dbf
+channel ORA_DISK_1: starting piece 1 at 26.05.2023 07:34:28
+channel ORA_DISK_1: finished piece 1 at 26.05.2023 07:34:43
+piece handle=/home/oracle/backup/TSKDB/backupset/2023_05_26/o1_mf_nnndf_TAG20230526T073428_l70k74gl_.bkp tag=TAG20230526T073428 comment=NONE
+channel ORA_DISK_1: backup set complete, elapsed time: 00:00:15
+Finished backup at 26.05.2023 07:34:43
+
+Starting Control File and SPFILE Autobackup at 26.05.2023 07:34:43
+piece handle=/home/oracle/backup/TSKDB/autobackup/2023_05_26/o1_mf_s_1137828883_l70k7mq1_.bkp comment=NONE
+Finished Control File and SPFILE Autobackup at 26.05.2023 07:34:44
+
+
+
+
+
+
+
+
+
+
+
+
 ## ULOHA
 --------------------------------------------------
 0/ vytvorte si subor cez: vi futbalisti.txt
@@ -68,36 +146,3 @@ pomaranc
 jablko
 
 
-
-
-PATCHING
--------------------------------------
-$ORACLE_HOME/OPatch/opatch lspatches
-
-29585399;OCW RELEASE UPDATE 19.3.0.0.0 (29585399)
-29517242;Database Release Update : 19.3.0.0.190416 (29517242)
-OPatch succeeded.
-
-$ORACLE_HOME/OPatch/opatch lsinventory
-
--rw-r--r--. 1 oracle oinstall 1495300727 May 26 11:31 p32218454_190000_Linux-x86-64.zip
--rw-r--r--. 1 oracle oinstall  124843817 May 26 11:32 p6880880_122010_Linux-x86-64.zip
-
-/u01/app/oracle
-unzip p32218454_190000_Linux-x86-64.zip 
-cd $ORACLE_HOME
-cp /u01/app/oracle/p6880880_122010_Linux-x86-64.zip 
-mv Opatch Opatch_bck
-unzip p6880880_122010_Linux-x86-64.zip
-
-SQL> shu immediate;
-
-lsnrctl stop LISTENER
-
-cd /u01/app/oracle/32218454
-
-$ORACLE_HOME/OPatch/opatch apply
-
-SQL> startup
-
-$ORACLE_HOME/OPatch/datapatch -verbose
