@@ -1,4 +1,13 @@
 
+sqlplus student16/start123@//10.233.133.153:1525/tSKDB
+
+sqlplus APPADM/start123@//10.233.133.28:1521/tmyDB
+
+
+
+
+
+
 ## PRENESENIE DAT priklad PRODDB na TESTDB
 ---------------------------------------------------------------------------------------------------------------------
 1/ EXPORT NA SOURCE:
