@@ -163,7 +163,10 @@ select owner, table_name, tablespace_name from dba_tables where owner in ('APPAD
 
 
 
-
+# PATCHING
+-- AS ORACLE USER
+mkdir /u01/app/oracle/patches
+scp oracle@10.233.133.153:/u01/app/oracle/patches/* /u01/app/oracle/patches
 
 
 
