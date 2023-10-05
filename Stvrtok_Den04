@@ -89,10 +89,6 @@ grant create table to STUDENT16;
 
 
 
-
-
-
-
 ## PRENESENIE DAT priklad PRODDB na TESTDB
 ---------------------------------------------------------------------------------------------------------------------
 1/ EXPORT NA SOURCE:
@@ -105,100 +101,13 @@ scp oracle@10.233.133.153:/u01/app/oracle/export/full.dmp /u01/app/oracle/export
 impdp \'/ as sysdba\' dumpfile=full.dmp directory=DPDIR log=impdp_ful_expdp.log schemas=STUDENT03,STUDENT07, LEKTOR01
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-STARE VECI
------------------------------------------------------------------------------------------------------------------------
-
-
-
-
-
-
-
-
-
-
-
-
-
-ULOHY
-1. prestavil som port na listeneri na 1525 na Databazovom servri
-   u vas (na clientskych servroch) v tnsnames.ora si zmente port na 1525 a pripojte sa do databazi
-
-2. spustite script nachadzajuci sa v /tmp/sw/import_zamestnanci.sql
-
-3. pomocou desc a count(*) zistite kolko stlpcov a riadkov ma tabulka ZAM
-
-4. Pomocu prikazu "create table ZAM_BCK as select * from ZAM;" urobte backup tabulky ZAM
-
-5. Zmazte lubovolny riadok z tab ZAM, nezabudnite tranzakciu korektne ukoncit
-
-6. v tabulke ZAM pomocou SELECTU zistite ake maju platy zamestnanci s priezviskom Horvath
-
-7. v tabulke ZAM si zvyste na 3000 eur
-
-8. Pravdivo si odpovedzte na otazku: paci sa mi toto skolenie ?
-   A odpoved zapiste do tabulky: LEKTOR01.ODPOVED
-
-
-POMOCKY:
-https://www.w3schools.com/sql/sql_syntax.asp
-----------
-1. echo $ORACLE_HOME
-2. @
-3. select count(*) from
-4. 
-5. delete from ZAM 
-6. desc ZAM
-7. update ZAM set  
-8. desc LEKTOR01.ODPOVED 
-   INSERT INTO ...
-
-
-
-
-## EXPDP/IMPDP + RMAN + FLASHBACK
-
-
-## PRENESENIE DAT priklad PRODDB na TESTDB
----------------------------------------------------------------------------------------------------------------------
-1/ EXPORT NA SOURCE:
-expdp \'/ as sysdba\' dumpfile=full.dmp directory=DPDIR log=ful_expdp.log full=y
-2/ COPY NA DESTINATION:
-scp gaussteacher@10.233.133.28:/tmp/full.dmp /u01/data/export/
-3/ IMPORT TO DESTINATION:
-impdp \'/ as sysdba\' dumpfile=full.dmp directory=DPDIR log=impdp_ful_expdp.log schemas=STUDENT03,STUDENT07
-
------------------------------------------------------------------------------------------------------------------------
-## ULOHY:
-1. 
-impdp \'/ as sysdba\' dumpfile=full.dmp directory=DPDIR log=impdp_ful_expdp.log schemas=STUDENT03,STUDENT07
-
-2.
-sqlplus APPADM     (nie: sqlplus / as sysdba)
+## ULOHA
+1/
+sqlplus / as sysdba
+create user APPADM identified by "start123";
+grant create session to STUDENT16;
+grant create table to STUDENT16;
+ALTER USER STUDENT16 QUOTA 5G ON USERS; 
 
 CREATE TABLE t1_odd
 ( dept_id number NOT NULL,
@@ -249,7 +158,7 @@ SQL> DELETE FROM zamestnanci WHERE .....
 SQL> create tablespace NEW_TBS datafile '/u01/data/TMYDB/new_tbs_01.dbf' size 5G;
 impdp \"/ as sysdba\" dumpfile=expdp_SCH_STUDENT15_24052023.dmp directory=DPDIR schemas=STUDENT15 log=expdp.log REMAP_SCHEMA=APPADM:IKDB REMAP_TABLESPACE=USERS:NEW_TBS
 
-BONUS:
+select owner, table_name, tablespace_name from dba_tables where owner in ('APPADM','IKDB');
 
 
 
