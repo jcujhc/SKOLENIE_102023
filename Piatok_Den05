@@ -67,23 +67,10 @@ Finished Control File and SPFILE Autobackup at 26.05.2023 07:34:44
 
 
 
-
-
-
-
-
-
-
-
-
 ## ULOHA
 --------------------------------------------------
-0/ vytvorte si subor cez: vi futbalisti.txt
-   vlozte do suboru riadok 66 - 88
-
-spool /tmp/futbalosti.log
-set lines 200 pages 2000
-set echo ON time ON timing ON
+0/ vytvorte si subor cez: vi /tmp/futbalosti.txt
+   vlozte do suboru riadok 75 - 90
 
 create table futbalisti
 (id number,
@@ -102,47 +89,18 @@ insert into futbalisti values (7, 'Pavol', 'Dina', 7000,sysdate);
 insert into futbalisti values (8, 'Ruslan', 'Lubarskiy',8000, sysdate);
 commit;
 
+sqlplus / as sysdba
+spool /tmp/futbalosti.log
+set lines 200 pages 2000
+set echo ON time ON timing ON
+@/tmp/futbalosti.txt
 select * from futbalisti;
 exit;
 
-1/ prihlaste sa do databazy pomocou STUDENT15 usera a spuste script futbalisti.txt 
-2/ urobte backup tabulky futbalisti (futbalisti_bck) pomocou sql prikazu
-3/  updatnite tabulku futbalisti nastavte plat 10000 pre futbalistu s menom Laco
-4/  updatnite tabulku futbalisti zvyste plat o 150eur pre futbalistu s id 2 a id 3.
-5/ vymazte hraca z tabulky futbalisti s menom: 'Ruslan', 'Lubarskiy'
-6/ vyexportujte a naimportujte data
-select * from dba_directories where DIRECTORY_NAME='DPDIR';
-expdp \"/ as sysdba\" dumpfile=expdp_STUDENT15.dmp directory=DPDIR schemas=STUDENT15 log=expdp.log
-impdp \"/ as sysdba\" dumpfile=expdp_SCH_STUDENT15_24052023.dmp directory=DPDIR schemas=STUDENT15 log=expdp.log REMAP_SCHEMA=STUDENT15:NEW_APPLIKACNA
-7/ overte ulohu 6:
-   select table_name, owner from dba_tables where owner in ('STUDENT15','NEW_APPLIKACNA');
 
 
-DEMO: tables STUDENT15
--------------------------------------
-create table ovocie (nazov varchar(20));
-select table_name from user_tables where table_name = 'ovocie';
-insert into ovocie ('pomaranc');
-commit;
 
-create table "ovocie" (nazov varchar(20));
-create table "Ovocie" (nazov varchar(20));
-insert into ovocie values ('jablko');
-commit;
 
-SQL> select table_name from user_tables where table_name like 'o%' or table_name like 'O%';
 
-TABLE_NAME
---------------------------------------------------------------------------------
-OVOCIE
-Ovocie
-ovocie
-
-SQL> select * from ovocie;
-
-NAZOV
---------------------
-pomaranc
-jablko
 
 
