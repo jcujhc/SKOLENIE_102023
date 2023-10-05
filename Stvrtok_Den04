@@ -1,8 +1,15 @@
+AS EINSTEIN
+which sqlplus
 sqlplus student16/start123@//10.233.133.153:1525/tSKDB
 sqlplus APPADM/start123@//10.233.133.28:1521/tmyDB
 
-cd /home/einsteinteacher/oracle/product/19.0.0/client_1
-cd network/admin/
+
+AS ORACLE USER
+which sqlplus
+sqlplus student16/start123@//10.233.133.153:1525/tSKDB
+sqlplus APPADM/start123@//10.233.133.28:1521/tmyDB
+
+cd /u01/app/oracle/product/19c/network/admin
 
 vi tnsnames.ora
 tSKDB =
@@ -18,8 +25,22 @@ tnsping tSKDB
 tnsping tmyDB
 tnsping LUBO
 
+sqlplus student16/start123@tSKDB
+
+select SYS_CONTEXT('USERENV', 'DB_NAME') dbname from dual;
+
+select SYS_CONTEXT('USERENV', 'IP_ADDRESS', 15) ipaddr from dual;
 
 
+
+EXPDP on DB SIDE
+--------------------------------
+mkdir /u01/app/oracle/export
+create or replace directory EXPIMP as '/u01/app/oracle/export';
+
+
+CLIENT SIDE:
+---------------------------------
 
 
 
