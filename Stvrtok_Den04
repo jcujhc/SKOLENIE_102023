@@ -39,10 +39,53 @@ mkdir /u01/app/oracle/export
 create or replace directory EXPIMP as '/u01/app/oracle/export';
 
 
+GRANT READ,WRITE ON DIRECTORY EXPIMP to student01;
+GRANT READ,WRITE ON DIRECTORY EXPIMP to student02;
+GRANT READ,WRITE ON DIRECTORY EXPIMP to student03;
+GRANT READ,WRITE ON DIRECTORY EXPIMP to student04;
+GRANT READ,WRITE ON DIRECTORY EXPIMP to student05;
+GRANT READ,WRITE ON DIRECTORY EXPIMP to student06;
+GRANT READ,WRITE ON DIRECTORY EXPIMP to student07;
+GRANT READ,WRITE ON DIRECTORY EXPIMP to student08;
+GRANT READ,WRITE ON DIRECTORY EXPIMP to student09;
+GRANT READ,WRITE ON DIRECTORY EXPIMP to student10;
+GRANT READ,WRITE ON DIRECTORY EXPIMP to student11;
+GRANT READ,WRITE ON DIRECTORY EXPIMP to student12;
+GRANT READ,WRITE ON DIRECTORY EXPIMP to student15;
+GRANT READ,WRITE ON DIRECTORY EXPIMP to student16;
+
+
 CLIENT SIDE:
 ---------------------------------
+[oracle@centos8 admin]$ exp
+exp       expand    expdp     export    exportfs  expr
 
+expdp student16@tSKDB dumpfile=STUDENT16.dmp directory=EXPIMP log=STUDENT16.log SCHEMAS=STUDENT16
 
+AS ORACLE
+mkdir /u01/app/oracle/export
+scp oracle@10.233.133.153:/u01/app/oracle/export/STUDENT16.dmp /u01/app/oracle/export
+
+[oracle@centos8 admin]$ ls -la /u01/app/oracle/export
+total 404
+drwxr-xr-x. 2 oracle oinstall   4096 Oct  5 04:26 .
+drwxr-xr-x. 6 oracle dba        4096 Oct  5 04:23 ..
+-rw-r-----. 1 oracle oinstall 405504 Oct  5 04:26 STUDENT16.dmp
+
+sqlplus / as sysdba
+create or replace directory DPDIR as '/u01/app/oracle/export';
+grant read,write ON DIRECTORY DPDIR to sys,system;
+create user STUDENT16 identified by "start123";
+impdp \'/ as sysdba\' dumpfile=STUDENT16.dmp directory=DPDIR log=impdp_STUDENT16.log schemas=STUDENT16
+
+ALTER USER STUDENT16 QUOTA 5G ON USERS; 
+impdp \"/ as sysdba\" dumpfile=STUDENT16.dmp directory=DPDIR log=impdp_STUDENT16.log schemas=STUDENT16
+
+sqlplus STUDENT16/start123
+(?)
+
+grant create session to STUDENT16;
+grant create table to STUDENT16;
 
 
 
@@ -53,11 +96,13 @@ CLIENT SIDE:
 ## PRENESENIE DAT priklad PRODDB na TESTDB
 ---------------------------------------------------------------------------------------------------------------------
 1/ EXPORT NA SOURCE:
-expdp \'/ as sysdba\' dumpfile=full.dmp directory=DPDIR log=ful_expdp.log full=y
+expdp \'/ as sysdba\' dumpfile=full.dmp directory=EXPDP log=ful_expdp.log full=y
+
 2/ COPY NA DESTINATION:
-scp gaussteacher@10.233.133.28:/tmp/full.dmp /u01/data/export/
+scp oracle@10.233.133.153:/u01/app/oracle/export/full.dmp /u01/app/oracle/export
+
 3/ IMPORT TO DESTINATION:
-impdp \'/ as sysdba\' dumpfile=full.dmp directory=DPDIR log=impdp_ful_expdp.log schemas=STUDENT03,STUDENT07
+impdp \'/ as sysdba\' dumpfile=full.dmp directory=DPDIR log=impdp_ful_expdp.log schemas=STUDENT03,STUDENT07, LEKTOR01
 
 
 
