@@ -83,6 +83,7 @@ CONFIGURE SNAPSHOT CONTROLFILE NAME TO '/u01/app/oracle/product/19c/dbs/snapcf_t
 
 ## NASTAVENIE BACKUP DESTINACIE:
 ---------------------------------------
+[oracle@centos8 ~]$ sqlplus / as sysdba
 SQL> alter system set db_recovery_file_dest_size=10G;
 SQL> alter system set db_recovery_file_dest='/home/oracle/backup';
 
