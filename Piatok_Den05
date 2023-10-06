@@ -45,25 +45,27 @@ select * from v$log;
 select * from v$logfile;
 exit;
 
+
+## TEST ZE BACKUP NEPOJDE AK MAME DATABAZU V NOARCHIVE MODE
+------------------------------------------------------------------
 rman target /
 RMAN> backup database;
 
+
+
+## NASTAVENIE DATABAZY DO ARCHIVNEHO MODU
+---------------------------------------------------------
 [oracle@centos8 ~]$ mkdir /u01/app/oracle/backup/archivelog
 sqlplus '/as sysdba'
 SQL> alter system set log_archive_dest_1='LOCATION=/u01/app/oracle/backup/archivelog';
 SQL> alter system switch logfile;
-SQL> exit;
+SQL> archive log list;
+SQL> shutdown immediate; 
+SQL> startup mount;
+SQL> alter database archivelog; 
+SQL> alter database open;
+SQL> archive log list;
 
-# Nastavenie databazy do archive modu
-[oracle@centos8 ~]$ sqlplus / as sysdba
-SQL>
-archive log list;
-shutdown immediate; 
-startup mount;
-alter database archivelog; 
-alter database open;
-
-archive log list;
 --------------------------------------------------------------
 Database log mode              Archive Mode
 Automatic archival             Enabled
@@ -73,11 +75,11 @@ Next log sequence to archive   8
 Current log sequence           8
 
 
-# Nastavenie backup destinacie
+## NASTAVENIE BACKUP DESTINACIE
+---------------------------------------------------------
 [oracle@centos8 ~]$ sqlplus / as sysdba
-SQL>
-alter system set db_recovery_file_dest_size=10g;
-alter system set db_recovery_file_dest='/u01/app/oracle/backup';
+SQL> alter system set db_recovery_file_dest_size=10g;
+SQL> alter system set db_recovery_file_dest='/u01/app/oracle/backup';
 
 SQL> show parameter recovery
 
@@ -88,19 +90,31 @@ db_recovery_file_dest_size           big integer 10G
 recovery_parallelism                 integer     0
 remote_recovery_file_dest            string
 
-exit;
+
+SQL> exit;
 
 
-# backup databazy
+
+## BACKUP DATABAZY
+---------------------------------------------------------
 [oracle@centos8 ~]$ rman target /
 RMAN> show all;
 RMAN> backup database;
+
 
 
 ## BACKUP ARCH LOGOV:
 ---------------------------------------------------------
 rman target /
 RMAN> backup archivelog all delete input;
+
+
+
+
+
+
+
+
 
 
 DEMO RESTORE DATAFILE:
