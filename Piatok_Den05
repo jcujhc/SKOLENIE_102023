@@ -97,41 +97,8 @@ RMAN> show all;
 RMAN> backup database;
 
 
-
-
-
-## FLASHBACK
----------------------------------------------------------------------------------
-SQL> 
-alter system set db_recovery_file_dest='/home/oracle/backup' SCOPE=spfile;
-alter system set db_recovery_file_dest_size=10G SCOPE=spfile;
-show parameter recovery
-alter database flashback on;
-select flashback_on from v$database;
-create restore point MY_RP guarantee flashback database; 
-
-select * from futbalisti;
-
--- drop table futbalisti;
-
-SQL> 
-shut immediate;
-startup mount;
-FLASHBACK DATABASE to restore point MY_RP;
-alebo SQL> FLASHBACK DATABASE TO TIMESTAMP TO_TIMESTAMP('2023-05-26 09:45:00', 'YYYY-MM-DD HH24:MI:SS');
-
-SQL> alter database open resetlogs;
-
-
-
-
-
-
-
 ## BACKUP ARCH LOGOV:
 ---------------------------------------------------------
-
-
 rman target /
 RMAN> backup archivelog all delete input;
 
@@ -309,3 +276,29 @@ commit;
 
 
 
+
+
+
+
+
+## FLASHBACK
+---------------------------------------------------------------------------------
+SQL> 
+alter system set db_recovery_file_dest='/home/oracle/backup' SCOPE=spfile;
+alter system set db_recovery_file_dest_size=10G SCOPE=spfile;
+show parameter recovery
+alter database flashback on;
+select flashback_on from v$database;
+create restore point MY_RP guarantee flashback database; 
+
+select * from futbalisti;
+
+-- drop table futbalisti;
+
+SQL> 
+shut immediate;
+startup mount;
+FLASHBACK DATABASE to restore point MY_RP;
+alebo SQL> FLASHBACK DATABASE TO TIMESTAMP TO_TIMESTAMP('2023-05-26 09:45:00', 'YYYY-MM-DD HH24:MI:SS');
+
+SQL> alter database open resetlogs;
