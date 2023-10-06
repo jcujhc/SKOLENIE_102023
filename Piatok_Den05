@@ -106,6 +106,8 @@ RMAN> backup database;
 ---------------------------------------------------------
 rman target /
 RMAN> backup archivelog all delete input;
+RMAN> list backup of archivelog all;
+
 
 
 ## CREATE TABLESPACE
@@ -114,7 +116,6 @@ set lines 300
 col FILE_NAME for a50
 select FILE_NAME, FILE_ID, TABLESPACE_NAME, BYTES/1024/1024 MB from dba_data_files;
 create tablespace KOZA datafile '/u01/data/TMYDB/koza01.dbf' size 500m;
-
 
 
 
