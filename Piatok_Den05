@@ -30,6 +30,18 @@ set echo ON time ON timing ON
 select * from futbalisti;
 exit;
 
+## NASTAVENEI DB DO ARCHIVE MODU
+---------------------------------------------------------------------------------
+[oracle@centos8 ~]$ mkdir /home/oracle/backup
+[oracle@centos8 ~]$ sqlplus / as sysdba
+SQL>
+archive log list;
+shutdown immediate; 
+startup mount;
+alter database archivelog; 
+alter database open;
+
+
 ## FLASHBACK
 ---------------------------------------------------------------------------------
 SQL> 
