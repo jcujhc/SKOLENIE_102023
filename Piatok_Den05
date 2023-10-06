@@ -203,12 +203,12 @@ Option Repair Description
 ------ ------------------
 1      Restore and recover datafile 2; Restore and recover datafile 7
   Strategy: The repair includes complete media recovery with no data loss
-  Repair script: /u01/app/oracle/diag/rdbms/tskdb/tSKDB/hm/reco_3386244624.hm
+  Repair script: /u01/app/oracle/diag/rdbms/tmydb/tmyDB/hm/reco_3386244624.hm
 
 RMAN> repair failure;
 
 Strategy: The repair includes complete media recovery with no data loss
-Repair script: /u01/app/oracle/diag/rdbms/tskdb/tSKDB/hm/reco_3386244624.hm
+Repair script: /u01/app/oracle/diag/rdbms/tmydb/tmyDB/hm/reco_3386244624.hm
 
 contents of repair script:
    # restore and recover datafile
@@ -220,16 +220,15 @@ contents of repair script:
 Do you really want to execute the above repair (enter YES or NO)? y
 executing repair script
 
-sql statement: alter database datafile 2, 7 offline
+sql statement: alter database datafile 7 offline
 
 Starting restore at 26.05.2023 07:43:19
 using channel ORA_DISK_1
 
 channel ORA_DISK_1: starting datafile backup set restore
 channel ORA_DISK_1: specifying datafile(s) to restore from backup set
-channel ORA_DISK_1: restoring datafile 00002 to /u01/data/tSKDB/skolenie02.dbf
 channel ORA_DISK_1: restoring datafile 00007 to /u01/data/tSKDB/users01.dbf
-channel ORA_DISK_1: reading from backup piece /home/oracle/backup/TSKDB/backupset/2023_05_26/o1_mf_nnndf_TAG20230526T073428_l70k74gl_.bkp
+channel ORA_DISK_1: reading from backup piece /home/oracle/backup/TMYDB/backupset/2023_05_26/o1_mf_nnndf_TAG20230526T073428_l70k74gl_.bkp
 channel ORA_DISK_1: piece handle=/home/oracle/backup/TSKDB/backupset/2023_05_26/o1_mf_nnndf_TAG20230526T073428_l70k74gl_.bkp tag=TAG20230526T073428
 channel ORA_DISK_1: restored backup piece 1
 channel ORA_DISK_1: restore complete, elapsed time: 00:00:07
@@ -270,7 +269,7 @@ RMAN>
 ## FLASHBACK
 ---------------------------------------------------------------------------------
 SQL> 
-alter system set db_recovery_file_dest='/home/oracle/backup' SCOPE=spfile;
+alter system set db_recovery_file_dest='/u01/app/oracle/backup';
 alter system set db_recovery_file_dest_size=10G SCOPE=spfile;
 show parameter recovery
 alter database flashback on;
