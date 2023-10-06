@@ -136,7 +136,7 @@ oracle@centos8$ rm -rf /u01/data/tmyDB/users01.dbf
 SQL> select * from STUDENT07.OVOCIE;
 SQL> insert into OVOCIE values (2,'mandarinka',sysdate);
 
-SQL@tSKDB> select * from STUDENT07.OVOCIE;
+SQL> select * from STUDENT07.OVOCIE;
 select * from STUDENT07.OVOCIE
                                *
 ERROR at line 1:
@@ -147,6 +147,10 @@ Linux-x86_64 Error: 2: No such file or directory
 Additional information: 3
 
 
+# instancia bud spadne alebo dame shu immediate;
+sqlplus / as sysdba
+SQL> startup 
+# databazu da iba do mountu
 
 oracle@centos8$ rman target /
 
@@ -155,7 +159,7 @@ Version 19.3.0.0.0
 
 Copyright (c) 1982, 2019, Oracle and/or its affiliates.  All rights reserved.
 
-connected to target database: TSKDB (DBID=1746570912)
+connected to target database: TMYDB (DBID=1746570912)
 
 RMAN> list failure;
 
@@ -191,8 +195,7 @@ no manual actions available
 
 Optional Manual Actions
 =======================
-1. If file /u01/data/tSKDB/skolenie02.dbf was unintentionally renamed or moved, restore it
-2. If file /u01/data/tSKDB/users01.dbf was unintentionally renamed or moved, restore it
+1. If file /u01/data/tmyDB/users01.dbf was unintentionally renamed or moved, restore it
 
 Automated Repair Options
 ========================
@@ -209,10 +212,10 @@ Repair script: /u01/app/oracle/diag/rdbms/tskdb/tSKDB/hm/reco_3386244624.hm
 
 contents of repair script:
    # restore and recover datafile
-   sql 'alter database datafile 2, 7 offline';
-   restore ( datafile 2, 7 );
-   recover datafile 2, 7;
-   sql 'alter database datafile 2, 7 online';
+   sql 'alter database datafile 7 offline';
+   restore ( datafile 7 );
+   recover datafile 7;
+   sql 'alter database datafile 7 online';
 
 Do you really want to execute the above repair (enter YES or NO)? y
 executing repair script
@@ -262,6 +265,35 @@ RMAN>
 
 
 
+
+
+## FLASHBACK
+---------------------------------------------------------------------------------
+SQL> 
+alter system set db_recovery_file_dest='/home/oracle/backup' SCOPE=spfile;
+alter system set db_recovery_file_dest_size=10G SCOPE=spfile;
+show parameter recovery
+alter database flashback on;
+select flashback_on from v$database;
+create restore point MY_RP guarantee flashback database; 
+
+select * from futbalisti;
+
+-- drop table futbalisti;
+
+SQL> 
+shut immediate;
+startup mount;
+FLASHBACK DATABASE to restore point MY_RP;
+alebo SQL> FLASHBACK DATABASE TO TIMESTAMP TO_TIMESTAMP('2023-05-26 09:45:00', 'YYYY-MM-DD HH24:MI:SS');
+
+SQL> alter database open resetlogs;
+
+
+
+
+
+
 ## BONUS
 
 sqlplus / as sysdba
@@ -301,33 +333,3 @@ INSERT INTO t2_zam (emp_number, last_name, first_name, salary, dept_id) VALUES (
 INSERT INTO t2_zam (emp_number, last_name, first_name, salary, dept_id) VALUES (401932,'Bacova','Daniela',1370,280905); 
 INSERT INTO t2_zam (emp_number, last_name, first_name, salary, dept_id) VALUES (401484,'Kollarova','Veronika',1250,309217); 
 commit;
-
-
-
-
-
-
-
-
-
-## FLASHBACK
----------------------------------------------------------------------------------
-SQL> 
-alter system set db_recovery_file_dest='/home/oracle/backup' SCOPE=spfile;
-alter system set db_recovery_file_dest_size=10G SCOPE=spfile;
-show parameter recovery
-alter database flashback on;
-select flashback_on from v$database;
-create restore point MY_RP guarantee flashback database; 
-
-select * from futbalisti;
-
--- drop table futbalisti;
-
-SQL> 
-shut immediate;
-startup mount;
-FLASHBACK DATABASE to restore point MY_RP;
-alebo SQL> FLASHBACK DATABASE TO TIMESTAMP TO_TIMESTAMP('2023-05-26 09:45:00', 'YYYY-MM-DD HH24:MI:SS');
-
-SQL> alter database open resetlogs;
