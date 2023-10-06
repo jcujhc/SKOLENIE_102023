@@ -32,7 +32,29 @@ exit;
 
 ## NASTAVENEI DB DO ARCHIVE MODU
 ---------------------------------------------------------------------------------
-[oracle@centos8 ~]$ mkdir /home/oracle/backup
+# ZOBRAZENIE ALERT.LOGU
+/u01/app/oracle/product/diag/rdbms/tmydb/tmyDB/trace
+tail -500f alert_tmyDB.log
+tail -500f /u01/app/oracle/product/diag/rdbms/tmydb/tmyDB/trace/alert_tmyDB.log
+
+# check destinacii a check 
+sqlplus '/as sysdba'
+SQL> 
+archive log list
+select * from v$log;
+select * from v$logfile;
+exit;
+
+rman target /
+RMAN> backup database;
+
+[oracle@centos8 ~]$ mkdir /u01/app/oracle/backup/archivelog
+sqlplus '/as sysdba'
+SQL> alter system set log_archive_dest_1='LOCATION=/u01/app/oracle/backup/archivelog';
+SQL> alter system switch logfile;
+SQL> exit;
+
+# Nastavenie databazy do archive modu
 [oracle@centos8 ~]$ sqlplus / as sysdba
 SQL>
 archive log list;
@@ -40,6 +62,42 @@ shutdown immediate;
 startup mount;
 alter database archivelog; 
 alter database open;
+
+archive log list;
+--------------------------------------------------------------
+Database log mode              Archive Mode
+Automatic archival             Enabled
+Archive destination            /u01/app/oracle/backup/archivelog
+Oldest online log sequence     6
+Next log sequence to archive   8
+Current log sequence           8
+
+
+# Nastavenie backup destinacie
+[oracle@centos8 ~]$ sqlplus / as sysdba
+SQL>
+alter system set db_recovery_file_dest_size=10g;
+alter system set db_recovery_file_dest='/u01/app/oracle/backup';
+
+SQL> show parameter recovery
+
+NAME                                 TYPE        VALUE
+------------------------------------ ----------- ------------------------------
+db_recovery_file_dest                string      /u01/app/oracle/backup
+db_recovery_file_dest_size           big integer 10G
+recovery_parallelism                 integer     0
+remote_recovery_file_dest            string
+
+exit;
+
+
+# backup databazy
+[oracle@centos8 ~]$ rman target /
+RMAN> show all;
+RMAN> backup database;
+
+
+
 
 
 ## FLASHBACK
@@ -69,88 +127,10 @@ SQL> alter database open resetlogs;
 
 
 
-## ULOHA 2 - backup DB
----------------------------------
-rman target /
-
-RMAN> show all;
-
-using target database control file instead of recovery catalog
-RMAN configuration parameters for database with db_unique_name TSKDB are:
-CONFIGURE RETENTION POLICY TO REDUNDANCY 1; # default
-CONFIGURE BACKUP OPTIMIZATION OFF; # default
-CONFIGURE DEFAULT DEVICE TYPE TO DISK; # default
-CONFIGURE CONTROLFILE AUTOBACKUP ON; # default
-CONFIGURE CONTROLFILE AUTOBACKUP FORMAT FOR DEVICE TYPE DISK TO '%F'; # default
-CONFIGURE DEVICE TYPE DISK PARALLELISM 1 BACKUP TYPE TO BACKUPSET; # default
-CONFIGURE DATAFILE BACKUP COPIES FOR DEVICE TYPE DISK TO 1; # default
-CONFIGURE ARCHIVELOG BACKUP COPIES FOR DEVICE TYPE DISK TO 1; # default
-CONFIGURE MAXSETSIZE TO UNLIMITED; # default
-CONFIGURE ENCRYPTION FOR DATABASE OFF; # default
-CONFIGURE ENCRYPTION ALGORITHM 'AES128'; # default
-CONFIGURE COMPRESSION ALGORITHM 'BASIC' AS OF RELEASE 'DEFAULT' OPTIMIZE FOR LOAD TRUE ; # default
-CONFIGURE RMAN OUTPUT TO KEEP FOR 7 DAYS; # default
-CONFIGURE ARCHIVELOG DELETION POLICY TO NONE; # default
-CONFIGURE SNAPSHOT CONTROLFILE NAME TO '/u01/app/oracle/product/19c/dbs/snapcf_tSKDB.f'; # default
-
-## NASTAVENIE BACKUP DESTINACIE:
----------------------------------------
-[oracle@centos8 ~]$ mkdir /home/oracle/backup
-[oracle@centos8 ~]$ sqlplus / as sysdba
-
-SQL> alter system set db_recovery_file_dest_size=10G;
-SQL> alter system set db_recovery_file_dest='/home/oracle/backup';
-
-SQL> show parameter recovery
-NAME                                 TYPE        VALUE
------------------------------------- ----------- ------------------------------
-db_recovery_file_dest                string      /home/oracle/backup
-db_recovery_file_dest_size           big integer 10G
-recovery_parallelism                 integer     0
-remote_recovery_file_dest            string
-
-
-## BACKUP DATABAZY:
----------------------------------------------------------
-rman target /
-
-RMAN> backup database;
-
-Starting backup at 26.05.2023 07:34:27
-using target database control file instead of recovery catalog
-allocated channel: ORA_DISK_1
-channel ORA_DISK_1: SID=506 device type=DISK
-channel ORA_DISK_1: starting full datafile backup set
-channel ORA_DISK_1: specifying datafile(s) in backup set
-input datafile file number=00002 name=/u01/data/tSKDB/skolenie02.dbf
-input datafile file number=00001 name=/u01/data/tSKDB/system01.dbf
-input datafile file number=00003 name=/u01/data/tSKDB/sysaux01.dbf
-input datafile file number=00005 name=/u01/data/tSKDB/skolenie01.dbf
-input datafile file number=00007 name=/u01/data/tSKDB/users01.dbf
-input datafile file number=00004 name=/u01/data/tSKDB/undotbs01.dbf
-input datafile file number=00008 name=/u01/data/tSKDB/APLIKACIA/apll_01.dbf
-channel ORA_DISK_1: starting piece 1 at 26.05.2023 07:34:28
-channel ORA_DISK_1: finished piece 1 at 26.05.2023 07:34:43
-piece handle=/home/oracle/backup/TSKDB/backupset/2023_05_26/o1_mf_nnndf_TAG20230526T073428_l70k74gl_.bkp tag=TAG20230526T073428 comment=NONE
-channel ORA_DISK_1: backup set complete, elapsed time: 00:00:15
-Finished backup at 26.05.2023 07:34:43
-
-Starting Control File and SPFILE Autobackup at 26.05.2023 07:34:43
-piece handle=/home/oracle/backup/TSKDB/autobackup/2023_05_26/o1_mf_s_1137828883_l70k7mq1_.bkp comment=NONE
-Finished Control File and SPFILE Autobackup at 26.05.2023 07:34:44
-
-
-
 
 ## BACKUP ARCH LOGOV:
 ---------------------------------------------------------
-SQL> archive log list;
-Database log mode              Archive Mode
-Automatic archival             Enabled
-Archive destination            /home/oracle/archive
-Oldest online log sequence     6
-Next log sequence to archive   8
-Current log sequence           8
+
 
 rman target /
 RMAN> backup archivelog all delete input;
