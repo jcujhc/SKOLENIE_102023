@@ -124,20 +124,28 @@ RMAN> restore archivelog from sequence 13 until sequence 13;
 
 
 
-DEMO RESTORE DATAFILE:
----------------------------------------
-oracle@centos8$ rm -rf /u01/data/tSKDB/users01.dbf
-oracle@centos8$ rm -rf /u01/data/tSKDB/skolenie02.dbf
+## DEMO RESTORE DATAFILE AK BOL ZMAZANY DATAFILE
+--------------------------------------------------------------
+SQL> 
+col OWNER for a15
+col SEGMENT_NAME for a30
+select OWNER, SEGMENT_NAME, BYTES/1024/1024 MB, TABLESPACE_NAME from dba_segments where TABLESPACE_NAME='USERS';
 
-SQL@tSKDB> select count(*) from STUDENT15.T1;
-select count(*) from STUDENT15.T1
+oracle@centos8$ rm -rf /u01/data/tmyDB/users01.dbf
+
+SQL> select * from STUDENT07.OVOCIE;
+SQL> insert into OVOCIE values (2,'mandarinka',sysdate);
+
+SQL@tSKDB> select * from STUDENT07.OVOCIE;
+select * from STUDENT07.OVOCIE
                                *
 ERROR at line 1:
 ORA-01116: error in opening database file 7
-ORA-01110: data file 7: '/u01/data/tSKDB/users01.dbf'
+ORA-01110: data file 7: '/u01/data/tmyDB/users01.dbf'
 ORA-27041: unable to open file
 Linux-x86_64 Error: 2: No such file or directory
 Additional information: 3
+
 
 
 oracle@centos8$ rman target /
