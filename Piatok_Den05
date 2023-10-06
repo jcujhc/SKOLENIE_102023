@@ -102,14 +102,6 @@ RMAN> show all;
 RMAN> backup database;
 
 
-## BACKUP ARCH LOGOV:
----------------------------------------------------------
-rman target /
-RMAN> backup archivelog all delete input;
-RMAN> list backup of archivelog all;
-
-
-
 ## CREATE TABLESPACE
 ---------------------------------------------------------
 set lines 300
@@ -117,6 +109,18 @@ col FILE_NAME for a50
 select FILE_NAME, FILE_ID, TABLESPACE_NAME, BYTES/1024/1024 MB from dba_data_files;
 create tablespace KOZA datafile '/u01/data/TMYDB/koza01.dbf' size 500m;
 
+
+## BACKUP ARCH LOGOV a LIST BACKUP OF ARCHIVELOG
+---------------------------------------------------------
+rman target /
+RMAN> backup archivelog all delete input;
+RMAN> list backup of archivelog all;
+
+
+## PRIKLAD RESTORE OF ARCHIVELOGU
+---------------------------------------------------------
+rman target /
+RMAN> restore archivelog from sequence 13 until sequence 13;
 
 
 
